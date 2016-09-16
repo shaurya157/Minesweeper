@@ -1,4 +1,6 @@
 require_relative 'tile.rb'
+require 'byebug'
+
 class Board
   attr_accessor :board, :bombs
 
@@ -29,7 +31,6 @@ class Board
   end
 
   def set_tile_value
-    p @bombs
     @bombs.each do |position|
       adjacent_tiles = adjacent(position)
       adjacent_tiles.each do |tile|
