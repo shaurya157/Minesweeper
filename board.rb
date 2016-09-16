@@ -1,10 +1,9 @@
 require_relative 'tile.rb'
-require 'byebug'
 
 class Board
   attr_accessor :grid, :bombs
 
-  def initialize(number)
+  def initialize(number = 9)
     @grid = Array.new(number) { Array.new(number) { Tile.new } }
     @bombs = []
     populate_bombs
@@ -19,7 +18,7 @@ class Board
         row, col = randomize
         tile = @grid[row][col]
       end
-      tile.value = "☼"
+      tile.value = "😹"
       @bombs << [row, col]
     end
   end
@@ -57,19 +56,9 @@ class Board
 
     [left_up_diag, left_down_diag, right_up_diag, right_down_diag, up, down, left, right]
   end
-end
 
-board = Board.new(9)
-board.set_tile_value
-grid = board.grid
-grid.each do |row|
-  str = ""
-  row.each do |tile|
-    if tile.state
-      str += " #{tile.value} "
-    else
-      str += " ■ "
-    end
+  def [](pos)
+    x, y = pos
+    @grid[x][y]
   end
-  p str
 end
