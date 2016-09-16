@@ -1,8 +1,9 @@
+require_relative 'tile.rb'
+require_relative 'board.rb'
+
 class Game
-
   def self.mine_field(number = 9)
-    grid = Array.new(number) { Array.new(9) { Tile.new } }
-
+    grid = Board.new(number)
     Game.new(grid)
   end
 
@@ -10,22 +11,7 @@ class Game
     @grid = grid
   end
 
-  def populate_bombs
-    @grid.length.times do
-      row, col = randomize
-      tile = @grid[row][col]
-
-      until !(tile.value == 0)
-        row, col = randomize
-        tile = @grid[row][col]
-      end
-      tile.value = "☼"
-    end
-  end
-
-  def randomize
-    row = rand(@grid.length)
-    col = rand(@grid.length)
-    [row, col]
+  def display
+    @grid.each { |row| row.each { |tile| puts tile.value } }
   end
 end
