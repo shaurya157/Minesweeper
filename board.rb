@@ -65,7 +65,11 @@ grid = board.grid
 grid.each do |row|
   str = ""
   row.each do |tile|
-    str += " #{tile.value} "
+    if tile.state
+      str += " #{tile.value} "
+    else
+      str += " ■ "
+    end
   end
   p str
 end
