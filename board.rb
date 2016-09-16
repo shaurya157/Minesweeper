@@ -7,6 +7,7 @@ class Board
     @grid = Array.new(number) { Array.new(number) { Tile.new } }
     @bombs = []
     populate_bombs
+    set_tile_value
   end
 
   def populate_bombs
@@ -33,11 +34,8 @@ class Board
     @bombs.each do |position|
       adjacent_tiles = adjacent(position)
       adjacent_tiles.each do |tile|
-        next if tile.any? { |x| x < 0 }
         row, col = tile
-        next if @grid[row].nil?
         current_tile = @grid[row][col]
-        next if current_tile.nil?
         current_tile.value += 1 if current_tile.value.is_a?(Fixnum)
       end
     end
@@ -45,20 +43,34 @@ class Board
 
   def adjacent(position)
     row, col = position
-    left_up_diag = [row - 1, col - 1]
-    left_down_diag = [row + 1, col - 1]
-    right_up_diag = [row - 1, col + 1]
-    right_down_diag = [row + 1, col + 1]
+    left_up = [row - 1, col - 1]
+    left_down = [row + 1, col - 1]
+    right_up = [row - 1, col + 1]
+    right_down = [row + 1, col + 1]
     left = [row, col - 1]
     right = [row, col + 1]
     up = [row - 1, col]
     down = [row + 1, col]
 
-    [left_up_diag, left_down_diag, right_up_diag, right_down_diag, up, down, left, right]
+    [left_up, left_down, right_up, right_down, up, down, left, right].select do |pos|
+      pos.all? {|num| num < @grid.length && num >= 0}
+    end
   end
 
   def [](pos)
     x, y = pos
     @grid[x][y]
+  end
+
+  def recursive_reveal(pos)
+    tile = self[pos]
+
+    if tile.value == 0 && !tile.state
+      tile.reveal
+      adjacent_tiles = adjacent(pos)
+      adjacent_tiles.each { |pos| recursive_reveal(pos) }
+    elsif tile.value.is_a?(Fixnum)
+      tile.reveal
+    end
   end
 end

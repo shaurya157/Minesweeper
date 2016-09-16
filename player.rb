@@ -9,8 +9,9 @@ class Player
   end
 
   def flag?
-    p "Would you like to flag?(y/n):"
+    p "Would you like to flag?((yes or y)/(no or :enter)):"
     answer = gets.chomp
+    answer == 'yes' || answer == "y"
   end
 
   def parse_move(move)
