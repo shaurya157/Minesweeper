@@ -2,7 +2,7 @@ require_relative 'tile.rb'
 require 'byebug'
 
 class Board
-  attr_accessor :board, :bombs
+  attr_accessor :grid, :bombs
 
   def initialize(number)
     @grid = Array.new(number) { Array.new(number) { Tile.new } }
@@ -36,8 +36,9 @@ class Board
       adjacent_tiles.each do |tile|
         next if tile.any? { |x| x < 0 }
         row, col = tile
+        next if @grid[row].nil?
         current_tile = @grid[row][col]
-        next if @grid[row].nil? || current_tile.nil?
+        next if current_tile.nil?
         current_tile.value += 1 if current_tile.value.is_a?(Fixnum)
       end
     end
@@ -60,4 +61,11 @@ end
 
 board = Board.new(9)
 board.set_tile_value
-p board.board
+grid = board.grid
+grid.each do |row|
+  str = ""
+  row.each do |tile|
+    str += " #{tile.value} "
+  end
+  p str
+end
